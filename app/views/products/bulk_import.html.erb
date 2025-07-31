@@ -1,0 +1,175 @@
+<!-- app/views/products/bulk_import.html.erb -->
+<div class="dashboard-header">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div>
+      <h2 class="fw-bold mb-1">Bulk Import Products</h2>
+      <p class="text-muted mb-0">Upload Excel or CSV files to add multiple products at once</p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to 'Download Template', download_template_products_path(format: :csv), 
+          class: 'btn btn-outline-primary' %>
+      <%= link_to 'Back to Dashboard', products_path, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>
+
+<!-- Import Results -->
+<% if @import_results %>
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-success">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle me-2">
+              <path d="M9 11l3 3l8-8"></path>
+              <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+            Import Results
+          </h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-success me-2"><%= @import_results[:success_count] %></span>
+                <span>Products imported successfully</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-danger me-2"><%= @import_results[:error_count] %></span>
+                <span>Products with errors</span>
+              </div>
+            </div>
+          </div>
+
+          <% if @import_results[:errors]&.any? %>
+            <div class="mt-3">
+              <h6 class="text-danger">Errors:</h6>
+              <div class="alert alert-danger">
+                <ul class="mb-0">
+                  <% @import_results[:errors].each do |error| %>
+                    <li><%= error %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<!-- Instructions -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info me-2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          Instructions
+        </h5>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <h6>File Format Requirements:</h6>
+            <ul>
+              <li>Supported formats: Excel (.xlsx, .xls) or CSV (.csv)</li>
+              <li>First row must contain headers</li>
+              <li>Required columns: <code>name</code>, <code>price</code>, <code>quantity</code></li>
+              <li>Optional columns: <code>description</code>, <code>image_url</code></li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Column Details:</h6>
+            <ul>
+              <li><strong>name</strong>: Product name (required)</li>
+              <li><strong>description</strong>: Product description (optional)</li>
+              <li><strong>price</strong>: Product price in decimal format (required)</li>
+              <li><strong>quantity</strong>: Stock quantity as integer (required)</li>
+              <li><strong>image_url</strong>: Direct URL to product image (optional)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-3">
+          <strong>Tip:</strong> Download the template file to see the correct format and use it as a starting point for your import.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Form -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload me-2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Upload Products File
+        </h5>
+
+        <%= form_with url: process_bulk_import_products_path, method: :post, 
+            multipart: true, class: 'upload-form', data: { turbo: false } do |form| %>
+          
+          <div class="mb-4">
+            <label for="file" class="form-label">Select File</label>
+            <%= form.file_field :file, 
+                accept: '.xlsx,.xls,.csv', 
+                class: 'form-control', 
+                required: true,
+                id: 'file' %>
+            <div class="form-text">
+              Choose an Excel (.xlsx, .xls) or CSV (.csv) file containing your products data.
+            </div>
+          </div>
+
+          <div class="d-flex gap-3">
+            <%= form.submit 'Import Products', 
+                class: 'btn btn-primary', 
+                data: { 
+                  confirm: 'Are you sure you want to import these products? This action cannot be undone.',
+                  disable_with: 'Importing...' 
+                } %>
+            <%= link_to 'Cancel', products_path, class: 'btn btn-outline-secondary' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .upload-form {
+    max-width: 600px;
+  }
+  
+  .badge {
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .alert ul {
+    padding-left: 1.5rem;
+  }
+  
+  code {
+    background-color: #f8f9fa;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+  }
+  
+  .feather {
+    vertical-align: middle;
+  }
+</style>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Inventory System" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    
+    <!-- Add Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    const mainContent = document.querySelector('.main-content');
+    
+    // Check localStorage for saved state
+    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    
+    if (isCollapsed) {
+      sidebar.classList.add('collapsed');
+      mainContent.classList.add('sidebar-collapsed');
+    }
+    
+    toggleBtn.addEventListener('click', function() {
+      sidebar.classList.toggle('collapsed');
+      mainContent.classList.toggle('sidebar-collapsed');
+      
+      // Save state to localStorage
+      localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+    });
+  });
+</script>
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-light: #a5b4fc;
+        --primary-dark: #4f46e5;
+        --secondary: #f59e0b;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --gray: #94a3b8;
+        --danger: #ef4444;
+        --success: #10b981;
+      }
+      
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f1f5f9;
+        color: var(--dark);
+      }
+      
+      .sidebar {
+        background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+      }
+      
+      .sidebar-brand {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 1.5rem 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .nav-link {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        transition: all 0.2s ease;
+        font-weight: 500;
+      }
+      
+      .nav-link:hover {
+        background-color: rgba(255,255,255,0.1);
+        transform: translateX(4px);
+      }
+      
+      .nav-link.active {
+        background-color: rgba(255,255,255,0.2);
+        font-weight: 600;
+      }
+      
+      .card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      }
+      
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+      }
+      
+      .card-img-container {
+        height: 200px;
+        background-color: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .card-img-container img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.3s ease;
+      }
+      
+      .card:hover .card-img-container img {
+        transform: scale(1.05);
+      }
+      
+      .stock-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 999px;
+      }
+      
+      .stock-low {
+        background-color: rgba(239,68,68,0.2);
+        color: var(--danger);
+      }
+      
+      .stock-ok {
+        background-color: rgba(16,185,129,0.2);
+        color: var(--success);
+      }
+      
+      .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+      }
+      
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+      }
+      
+      .btn-outline-primary {
+        color: var(--primary);
+        border-color: var(--primary);
+      }
+      
+      .btn-outline-primary:hover {
+        background-color: var(--primary);
+        border-color: var(--primary);
+      }
+      
+      .alert-notification {
+        border-left: 4px solid var(--danger);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      }
+      
+      .alert-icon {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+        color: var(--danger);
+      }
+      
+      .search-box {
+        border-radius: 50px;
+        padding-left: 1.5rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+      }
+      
+      .search-box:focus {
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+      }
+      
+      .search-btn {
+        border-radius: 50px;
+        padding: 0.5rem 1.5rem;
+        margin-left: -50px;
+      }
+      
+      .dashboard-header {
+        background-color: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="d-flex min-vh-100">
+      <!-- Sidebar -->
+      <nav class="sidebar text-white vh-100 p-3 sticky-top" style="width: 280px;">
+        <div class="sidebar-brand d-flex align-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-package me-3">
+            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          <span>Inventory Pro</span>
+        </div>
+        
+       <!-- Update the sidebar section in your app/views/layouts/application.html.erb -->
+<ul class="nav flex-column mt-4">
+  <li class="nav-item">
+    <%= link_to products_path, class: "nav-link text-white d-flex align-items-center #{'active' if current_page?(products_path)}" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid me-3">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      Dashboard
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to new_product_path, class: "nav-link text-white d-flex align-items-center #{'active' if current_page?(new_product_path)}" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle me-3">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="16"></line>
+        <line x1="8" y1="12" x2="16" y2="12"></line>
+      </svg>
+      Add Product
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to bulk_import_products_path, class: "nav-link text-white d-flex align-items-center #{'active' if current_page?(bulk_import_products_path)}" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload me-3">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="17 8 12 3 7 8"></polyline>
+        <line x1="12" y1="3" x2="12" y2="15"></line>
+      </svg>
+      Bulk Import
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to export_products_path(format: :csv), class: "nav-link text-white d-flex align-items-center #{'active' if current_page?(export_products_path)}" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download me-3">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      Export CSV
+    <% end %>
+  </li>
+</ul>
+        
+        <div class="mt-auto pt-4">
+          <div class="text-center text-white-50 small">
+            Inventory Pro v1.0
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <div class="flex-grow-1 p-4">
+        <%= yield %>
+      </div>
+    </div>
+    
+  </body>
+</html>

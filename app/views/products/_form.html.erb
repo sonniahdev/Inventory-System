@@ -1,0 +1,185 @@
+<%= form_with(model: product, data: { turbo: true }, class: 'product-form') do |form| %>
+  <div class="form-card p-4 mb-4">
+    <h3 class="form-title mb-4"><%= product.persisted? ? 'Edit Product' : 'Add New Product' %></h3>
+    
+    <div class="mb-4">
+      <%= form.label :name, class: 'form-label fw-semibold mb-2' %>
+      <div class="input-group">
+        <span class="input-group-text">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11z"/>
+            <path fill-rule="evenodd" d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zm1 2a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-6a.5.5 0 0 0-.5-.5h-11z"/>
+          </svg>
+        </span>
+        <%= form.text_field :name, class: 'form-control form-control-lg', placeholder: 'Enter product name' %>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :description, class: 'form-label fw-semibold mb-2' %>
+      <div class="input-group">
+        <span class="input-group-text align-items-start pt-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+          </svg>
+        </span>
+        <%= form.text_area :description, class: 'form-control', rows: 4, placeholder: 'Enter product description' %>
+      </div>
+      <div class="form-text">Describe your product in detail</div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <%= form.label :price, class: 'form-label fw-semibold mb-2' %>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <%= form.number_field :price, step: 0.01, class: 'form-control', placeholder: '0.00' %>
+          <span class="input-group-text">USD</span>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <%= form.label :quantity, class: 'form-label fw-semibold mb-2' %>
+        <div class="input-group">
+          <span class="input-group-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+            </svg>
+          </span>
+          <%= form.number_field :quantity, class: 'form-control', placeholder: 'Enter quantity' %>
+          <span class="input-group-text">units</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :image, class: 'form-label fw-semibold mb-2' %>
+      <div class="file-upload-container">
+        <%= form.file_field :image, class: 'form-control visually-hidden', id: 'product-image-upload' %>
+        <label for="product-image-upload" class="file-upload-label">
+          <div class="file-upload-preview">
+            <% if product.image.attached? %>
+              <%= image_tag product.image, class: 'img-thumbnail preview-image' %>
+            <% else %>
+              <div class="empty-preview">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                  <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                </svg>
+                <span>Click to upload product image</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="file-upload-btn btn btn-outline-primary mt-2">
+            <%= product.image.attached? ? 'Change Image' : 'Upload Image' %>
+          </div>
+        </label>
+      </div>
+      <div class="form-text">Recommended size: 800x600px (JPEG or PNG)</div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center pt-2">
+      <%= link_to 'Cancel', products_path, class: 'btn btn-outline-secondary' %>
+      <%= form.submit product.persisted? ? 'Update Product' : 'Create Product', class: 'btn btn-primary px-4 py-2 fw-semibold' %>
+    </div>
+  </div>
+<% end %>
+
+<style>
+  .product-form {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  
+  .form-title {
+    color: var(--primary);
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .input-group-text {
+    background-color: #f8fafc;
+    color: var(--primary);
+  }
+  
+  .file-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .file-upload-label {
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .file-upload-preview {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+  }
+  
+  .file-upload-label:hover .file-upload-preview {
+    border-color: var(--primary-light);
+    background-color: rgba(99, 102, 241, 0.05);
+  }
+  
+  .empty-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--gray);
+  }
+  
+  .empty-preview svg {
+    margin-bottom: 0.5rem;
+  }
+  
+  .preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Image preview functionality
+    const fileInput = document.getElementById('product-image-upload');
+    const previewContainer = document.querySelector('.file-upload-preview');
+    
+    if (fileInput) {
+      fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            previewContainer.innerHTML = `<img src="${e.target.result}" class="img-thumbnail preview-image">`;
+            document.querySelector('.file-upload-btn').textContent = 'Change Image';
+          }
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  });
+</script>
