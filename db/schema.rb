@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_29_195320) do
   # These are extensions that must be enabled in order to support this database
+  ActiveRecord::Schema[8.0].define(version: 2025_07_29_195320) do
+
   enable_extension "pg_catalog.plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -50,6 +51,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_29_195320) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "image"
+  end
+
+  create_table "solid_cable_messages", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
