@@ -25,7 +25,7 @@ gem "rspec-rails", "~> 6.1"
 # gem "bcrypt", "~> 3.1.7"
 
 # Add these gems to your Gemfile
-gem "roo", "~> 2.9.0"  # For reading Excel files
+gem "roo", "~> 2.10.1" # For reading Excel files
 gem "roo-xls", "~> 1.2.0"  # For reading older .xls files
 
 gem "image_processing", "~> 1.2"
